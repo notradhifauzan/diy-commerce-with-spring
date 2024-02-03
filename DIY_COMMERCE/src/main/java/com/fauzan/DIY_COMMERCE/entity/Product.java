@@ -1,6 +1,10 @@
 package com.fauzan.DIY_COMMERCE.entity;
 
+import java.util.Date;
 import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,6 +20,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "product")
 public class Product {
+	/*
+	 * TODO
+	 * 1. add more relevant product attributes
+	 * 
+	 * */
+	
 	@jakarta.persistence.Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "productId")
@@ -31,16 +41,42 @@ public class Product {
 	
 	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "dateCreated")
+	@CreatedDate
+	private Date dateCreated;
+	
+	@Column(name = "lastModified")
+	@LastModifiedDate
+	private Date lastModified;
+	
+	@Column(name = "category")
+	private String category;
 
+	
 	public Product() {
 		this.productId = UUID.randomUUID().toString();
 	}
 	
-	/*
-	 * TODO
-	 * 1. add more relevant product attributes
-	 * 
-	 * */
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}
+
 
 	public String getProductId() {
 		return productId;

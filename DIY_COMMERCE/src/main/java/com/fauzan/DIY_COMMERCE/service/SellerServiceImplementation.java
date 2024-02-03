@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.fauzan.DIY_COMMERCE.entity.Product;
@@ -17,7 +19,12 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class SellerServiceImplementation implements SellerService {
-
+	/*
+	 * TODO
+	 * 
+	 * 1. 
+	 * */
+	
 	@Autowired
 	private SellerRepository sellerRepo;
 	
@@ -35,32 +42,27 @@ public class SellerServiceImplementation implements SellerService {
 
 	@Override
 	public void deleteSeller(String id) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public List<Seller> getSellers() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<Product> getSellerProducts(String id) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Page<Seller> getSellerByPage(Pageable pageable) {
+		return sellerRepo.findAll(pageable);
 	}
 	
 	static Seller unwrapSeller(Optional<Seller> entity, String id) {
 		if(entity.isPresent()) return entity.get();
 		else throw new SellerNotFoundException(id);
-		
-		/*
-		 * TODO
-		 * 
-		 * write Exception class for seller not found exception
-		 * pass the id as the parameter
-		 * */
 	}
 
 }

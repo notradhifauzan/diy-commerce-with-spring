@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,7 +65,7 @@ public class ProductApi {
 		if(page < 1) page = 1;
 		if(size < 1) size = 1;
 		
-		PageRequest pageable = PageRequest.of(page-1, size);
+		PageRequest pageable = PageRequest.of(page-1, size, Sort.by("dateCreated").descending());
 		Page<Product> products = productService.getAllProducts(pageable);
 		
 		return new ResponseEntity<>(products,HttpStatus.OK);

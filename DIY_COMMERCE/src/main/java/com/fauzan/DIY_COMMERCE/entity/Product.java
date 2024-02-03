@@ -15,68 +15,83 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "product")
 public class Product {
 	/*
-	 * TODO
-	 * 1. add more relevant product attributes
+	 * TODO 1. add more relevant product attributes
 	 * 
-	 * */
-	
+	 */
+
 	@jakarta.persistence.Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "productId")
 	private String productId;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name="sellerId",referencedColumnName = "sellerId")
+	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
 	@JsonIgnore
 	private Seller seller;
-	
+
 	@Column(name = "productName")
 	private String productName;
-	
+
 	@Column(name = "description")
 	private String description;
-	
-	@Column(name = "dateCreated")
+
+	@Column(name = "dateCreated", nullable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date dateCreated;
-	
+
 	@Column(name = "lastModified")
 	@LastModifiedDate
 	private Date lastModified;
-	
+
 	@Column(name = "category")
 	private String category;
 
+	@PrePersist
+	void onPrePersist() {
+		dateCreated = new java.util.Date();
+		lastModified = new java.util.Date();
+	}
 	
+	/*-----------------------------------------------------------------------------------------------------------*/
+	
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public Product() {
 		this.productId = UUID.randomUUID().toString();
 	}
-	
+
 	public Date getDateCreated() {
 		return dateCreated;
 	}
-
 
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-
 	public Date getLastModified() {
 		return lastModified;
 	}
 
-
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
-
 
 	public String getProductId() {
 		return productId;
@@ -101,7 +116,7 @@ public class Product {
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -115,6 +130,5 @@ public class Product {
 		return "Product [productId=" + productId + ", seller=" + seller.toString() + ", productName=" + productName
 				+ ", description=" + description + "]";
 	}
-	
-	
+
 }

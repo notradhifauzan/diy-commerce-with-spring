@@ -1,6 +1,7 @@
 package com.fauzan.DIY_COMMERCE.service;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -87,7 +88,13 @@ public class ProductServiceImplementation implements ProductService {
 			ReflectionUtils.setField(field, product, value);
 		});
 		
+		product.setLastModified(new Date());
 		return productRepo.save(product);
+	}
+	
+	@Override
+	public void deleteAll() {
+		productRepo.deleteAll();
 	}
 
 	static Product unwrapProduct(Optional<Product> product, String productId) {
@@ -101,6 +108,8 @@ public class ProductServiceImplementation implements ProductService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 	
 	
 

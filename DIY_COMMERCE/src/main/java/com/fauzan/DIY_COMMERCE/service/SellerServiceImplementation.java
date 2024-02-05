@@ -1,6 +1,5 @@
 package com.fauzan.DIY_COMMERCE.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,9 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.fauzan.DIY_COMMERCE.entity.Product;
 import com.fauzan.DIY_COMMERCE.entity.Seller;
+import com.fauzan.DIY_COMMERCE.exception.SellerEmailAlreadyExistException;
 import com.fauzan.DIY_COMMERCE.exception.SellerNotFoundException;
+import com.fauzan.DIY_COMMERCE.exception.SellerUsernameAlreadyException;
 import com.fauzan.DIY_COMMERCE.repository.SellerRepository;
 
 import lombok.AllArgsConstructor;
@@ -36,23 +36,18 @@ public class SellerServiceImplementation implements SellerService {
 
 	@Override
 	public Seller saveSeller(Seller seller) {
+		if(sellerRepo.findSellerByEmail(seller.getEmail()).isPresent()) throw new SellerEmailAlreadyExistException(seller.getEmail());
+		if(sellerRepo.findSellerByUsername(seller.getUsername()).isPresent()) throw new SellerUsernameAlreadyException(seller.getUsername());
+		
 		seller.setId(UUID.randomUUID().toString().substring(0,8));
 		return sellerRepo.save(seller);
 	}
 
 	@Override
 	public void deleteSeller(String id) {
+		unwrapSeller(sellerRepo.findById(id), id);
 		
-	}
-
-	@Override
-	public List<Seller> getSellers() {
-		return null;
-	}
-
-	@Override
-	public List<Product> getSellerProducts(String id) {
-		return null;
+		sellerRepo.deleteById(id);
 	}
 	
 	@Override

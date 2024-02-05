@@ -1,6 +1,10 @@
 package com.fauzan.DIY_COMMERCE.entity;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,19 +20,22 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "product")
 public class Product {
 	/*
 	 * TODO 1. add more relevant product attributes
 	 * 
 	 */
-
+	
 	@jakarta.persistence.Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "productId")
@@ -37,6 +45,10 @@ public class Product {
 	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
 	@JsonIgnore
 	private Seller seller;
+	
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<ProductVariation> variations;
 
 	@Column(name = "productName")
 	private String productName;
@@ -55,7 +67,7 @@ public class Product {
 
 	@Column(name = "category")
 	private String category;
-
+	
 	@PrePersist
 	void onPrePersist() {
 		dateCreated = new java.util.Date();
@@ -67,6 +79,14 @@ public class Product {
 	
 	public String getCategory() {
 		return category;
+	}
+
+	public List<ProductVariation> getVariations() {
+		return variations;
+	}
+
+	public void setVariations(List<ProductVariation> variations) {
+		this.variations = variations;
 	}
 
 	public void setCategory(String category) {
